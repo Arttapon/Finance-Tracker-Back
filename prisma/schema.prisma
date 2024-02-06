@@ -33,7 +33,7 @@ model User {
 model Profile {
   id           Int    @id @default(autoincrement())
   userId       Int    @unique
-  user         User   @relation(fields: [userId], references: [id])
+  user         User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   fullName     String
   profileImage String
   coverImage   String
@@ -42,7 +42,7 @@ model Profile {
 model Income {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category  String
   amount    Float
   details   String?
@@ -52,7 +52,7 @@ model Income {
 model Expense {
   id        Int      @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category  String
   amount    Float
   details   String?
@@ -62,7 +62,7 @@ model Expense {
 model Budget {
   id            Int      @id @default(autoincrement())
   userId        Int
-  user          User     @relation(fields: [userId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   category      String
   plannedAmount Float
   actualAmount  Float
@@ -95,7 +95,7 @@ enum BudgetCategory {
 model Saving {
   id            Int      @id @default(autoincrement())
   userId        Int
-  user          User     @relation(fields: [userId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   goalName      String
   targetAmount  Float
   currentAmount Float
@@ -105,7 +105,7 @@ model Saving {
 model Investment {
   id             Int      @id @default(autoincrement())
   userId         Int
-  user           User     @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   recommendation String
   createdAt      DateTime @default(now())
 }
@@ -113,7 +113,7 @@ model Investment {
 model FinancialPlan {
   id            Int      @id @default(autoincrement())
   userId        Int
-  user          User     @relation(fields: [userId], references: [id])
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   goalName      String
   targetAmount  Float
   currentAmount Float
@@ -123,7 +123,7 @@ model FinancialPlan {
 model InterestCalculation {
   id                 Int      @id @default(autoincrement())
   userId             Int
-  user               User     @relation(fields: [userId], references: [id])
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   principalAmount    Float
   interestRate       Float
   timePeriod         Int
@@ -134,7 +134,7 @@ model InterestCalculation {
 model DataSharing {
   id               Int      @id @default(autoincrement())
   userId           Int
-  user             User     @relation(fields: [userId], references: [id])
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   sharedWithUserId Int
   sharedWithUser   User     @relation("SharedWithUser", fields: [sharedWithUserId], references: [id])
   createdAt        DateTime @default(now())

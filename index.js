@@ -1,9 +1,8 @@
-// finance-tracker/back/index.js
 const express = require('express');
 const cors = require('cors');
 const notFoundMiddleware = require('./middlewares/notfound');
 const errorMiddleware = require('./middlewares/error');
-const authMiddleware = require('./routes/auth');
+const authRouter = require('./routes/auth'); // เปลี่ยนจาก authMiddleware เป็น authRouter
 const prisma = require('./models/db'); // Import Prisma Client
 
 const app = express();
@@ -26,8 +25,8 @@ app.get('/', (req, res) => {
   res.send('Welcome to Finance Tracker API');
 });
 
-// Use /auth route from authMiddleware
-app.use('/auth', authMiddleware);
+// Use /auth route from authRouter
+app.use('/auth', authRouter);
 
 // Middleware notFound when no route is found
 app.use(notFoundMiddleware);
