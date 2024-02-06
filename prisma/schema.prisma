@@ -1,0 +1,161 @@
+// finance-tracker/back/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  Int                   @id @default(autoincrement())
+  username            String
+  email               String                @unique
+  password            String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  Profile             Profile?
+  Income              Income[]
+  Expense             Expense[]
+  Budget              Budget[]
+  Saving              Saving[]
+  Investment          Investment[]
+  FinancialPlan       FinancialPlan[]
+  InterestCalculation InterestCalculation[]
+  DataSharing         DataSharing[]
+  Report              Report[]
+  Notification        Notification[]
+  SharedData DataSharing[] @relation("SharedWithUser")
+}
+
+model Profile {
+  id           Int    @id @default(autoincrement())
+  userId       Int    @unique
+  user         User   @relation(fields: [userId], references: [id])
+  fullName     String
+  profileImage String
+  coverImage   String
+}
+
+model Income {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  category  String
+  amount    Float
+  details   String?
+  createdAt DateTime @default(now())
+}
+
+model Expense {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  category  String
+  amount    Float
+  details   String?
+  createdAt DateTime @default(now())
+}
+
+model Budget {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  category      String
+  plannedAmount Float
+  actualAmount  Float
+  createdAt     DateTime @default(now())
+}
+
+enum IncomeCategory {
+  SALARY
+  FREELANCE
+  INVESTMENTS
+  OTHER
+}
+
+enum ExpenseCategory {
+  FOOD
+  TRANSPORTATION
+  HOUSING
+  ENTERTAINMENT
+  OTHER
+}
+
+enum BudgetCategory {
+  GROCERIES
+  UTILITIES
+  ENTERTAINMENT
+  HEALTHCARE
+  OTHER
+}
+
+model Saving {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  goalName      String
+  targetAmount  Float
+  currentAmount Float
+  createdAt     DateTime @default(now())
+}
+
+model Investment {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  recommendation String
+  createdAt      DateTime @default(now())
+}
+
+model FinancialPlan {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  user          User     @relation(fields: [userId], references: [id])
+  goalName      String
+  targetAmount  Float
+  currentAmount Float
+  createdAt     DateTime @default(now())
+}
+
+model InterestCalculation {
+  id                 Int      @id @default(autoincrement())
+  userId             Int
+  user               User     @relation(fields: [userId], references: [id])
+  principalAmount    Float
+  interestRate       Float
+  timePeriod         Int
+  calculatedInterest Float
+  createdAt          DateTime @default(now())
+}
+
+model DataSharing {
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id])
+  sharedWithUserId Int
+  sharedWithUser   User     @relation("SharedWithUser", fields: [sharedWithUserId], references: [id])
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
+  @@index([sharedWithUserId])
+}
+
+model Report {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+  reportType String
+  reportData String
+  createdAt  DateTime @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  createdAt DateTime @default(now())
+}
