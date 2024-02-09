@@ -8,7 +8,11 @@ const IncomeExpense = require('./routes/IncomeExpense');
 const budgetRoutes = require('./routes/budgetRoute');
 const savingRoutes = require('./routes/savingRoute'); 
 const investmentRoutes = require('./routes/investmentRoute');
-const financialPlanRouter = require('./routes/financial-plan-route');
+const interestCalculationRoutes = require('./routes/interestCalculationRoute');
+const dataSharingRoutes = require('./routes/dataSharingRoute');
+const reportRoutes = require('./routes/reportRoute');
+const notificationRoutes = require('./routes/notificationRoute');
+const FinancialPlan = require('./routes/FinancialPlan');
 const prisma = require('./models/db');
 
 const app = express();
@@ -38,7 +42,7 @@ app.use('/auth', authMiddleware);
 app.use('/profile', profileRoutes);
 
 // Use /financialplans route from financialPlanRouter
-app.use('/api', financialPlanRouter);
+app.use('/api', FinancialPlan);
 
 // Use income routes
 app.use('/incomeExpenses', IncomeExpense);
@@ -48,6 +52,12 @@ app.use('/saving', savingRoutes);
 
 // Use investment routes
 app.use('/invesment', investmentRoutes);
+
+// Use interestCalculation, dataSharing, report, and notification routes
+app.use('/api/interestcalculations', interestCalculationRoutes);
+app.use('/api/datasharing', dataSharingRoutes);
+app.use('/api/reports', reportRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Use budget routes
 app.use('/butget', budgetRoutes);
