@@ -2,8 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const notFoundMiddleware = require('./middlewares/notfound');
 const errorMiddleware = require('./middlewares/error');
-const authRouter = require('./routes/auth'); // เปลี่ยนจาก authMiddleware เป็น authRouter
-const prisma = require('./models/db'); // Import Prisma Client
+const authMiddleware = require('./routes/auth');
+const profileRoutes = require('./routes/profileRoute');
+const IncomeExpense = require('./routes/IncomeExpense');
+const budgetRoutes = require('./routes/budgetRoute');
+const savingRoutes = require('./routes/savingRoute'); 
+const investmentRoutes = require('./routes/investmentRoute');
+const financialPlanRouter = require('./routes/financial-plan-route');
+const prisma = require('./models/db');
 
 const app = express();
 const PORT = process.env.PORT || 1112;
@@ -25,8 +31,26 @@ app.get('/', (req, res) => {
   res.send('Welcome to Finance Tracker API');
 });
 
-// Use /auth route from authRouter
-app.use('/auth', authRouter);
+// Use /auth route from authMiddleware
+app.use('/auth', authMiddleware);
+
+// Use profile routes
+app.use('/profile', profileRoutes);
+
+// Use /financialplans route from financialPlanRouter
+app.use('/api', financialPlanRouter);
+
+// Use income routes
+app.use('/incomeExpenses', IncomeExpense);
+
+// Use saving routes
+app.use('/saving', savingRoutes);
+
+// Use investment routes
+app.use('/invesment', investmentRoutes);
+
+// Use budget routes
+app.use('/butget', budgetRoutes);
 
 // Middleware notFound when no route is found
 app.use(notFoundMiddleware);

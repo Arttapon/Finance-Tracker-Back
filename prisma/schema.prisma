@@ -27,7 +27,7 @@ model User {
   DataSharing         DataSharing[]
   Report              Report[]
   Notification        Notification[]
-  SharedData DataSharing[] @relation("SharedWithUser")
+  SharedData          DataSharing[]         @relation("SharedWithUser")
 }
 
 model Profile {
@@ -159,3 +159,5 @@ model Notification {
   message   String
   createdAt DateTime @default(now())
 }
+
+
