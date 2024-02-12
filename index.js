@@ -42,10 +42,10 @@ app.use('/auth', authMiddleware);
 app.use('/profile', profileRoutes);
 
 // Use /financialplans route from financialPlanRouter
-app.use('/api', FinancialPlan);
+app.use('/FinancialPlan', FinancialPlan);
 
 // Use income routes
-app.use('/incomeExpenses', IncomeExpense);
+app.use('/IncomeExpenses', IncomeExpense);
 
 // Use saving routes
 app.use('/saving', savingRoutes);
@@ -54,10 +54,10 @@ app.use('/saving', savingRoutes);
 app.use('/invesment', investmentRoutes);
 
 // Use interestCalculation, dataSharing, report, and notification routes
-app.use('/api/interestcalculations', interestCalculationRoutes);
-app.use('/api/datasharing', dataSharingRoutes);
-app.use('/api/reports', reportRoutes);
-app.use('/api/notifications', notificationRoutes);
+app.use('/interestcalculations', interestCalculationRoutes);
+app.use('/datasharing', dataSharingRoutes);
+app.use('/reports', reportRoutes);
+app.use('/notifications', notificationRoutes);
 
 // Use budget routes
 app.use('/butget', budgetRoutes);
