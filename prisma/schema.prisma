@@ -29,6 +29,7 @@ model User {
   Notification        Notification[]
   SharedData          DataSharing[]         @relation("SharedWithUser")
   UserData            UserData[]
+  Transaction         Transaction[]
 }
 
 model Profile {
@@ -162,11 +163,22 @@ model Notification {
 }
 
 model UserData {
-  id      Int   @id @default(autoincrement())
-  userId  Int
-  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  balance Float
+  id              Int      @id @default(autoincrement())
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  balance         Float
   transactionType String
-  amount         Float
-  createdAt      DateTime @default(now())
+  amount          Float
+  createdAt       DateTime @default(now())
+}
+
+model Transaction {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amount    Float
+  type      String 
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }

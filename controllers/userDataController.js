@@ -1,6 +1,5 @@
 // userData.controller.js
 const { PrismaClient } = require('@prisma/client');
-
 const prisma = new PrismaClient();
 
 // ฟังก์ชันสำหรับการดึงข้อมูล UserData จากฐานข้อมูล
@@ -24,7 +23,7 @@ const getUserData = async (req, res) => {
       console.error('Error fetching user data:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
-  };;
+  };
 
 // ฟังก์ชันสำหรับการสร้างข้อมูล UserData
 const createUserData = async (req, res) => {
@@ -43,7 +42,26 @@ const createUserData = async (req, res) => {
   }
 };
 
+// ฟังก์ชันสำหรับการสร้าง transaction
+const createTransaction = async (req, res) => {
+  try {
+    const { userId, amount, type } = req.body;
+    const transaction = await prisma.transaction.create({
+      data: {
+        userId,
+        amount,
+        type
+      }
+    });
+    res.status(201).json({ message: 'Transaction created successfully', transaction });
+  } catch (error) {
+    console.error('Error creating transaction:', error);
+    res.status(500).json({ error: 'Failed to create transaction' });
+  }
+};
+
 module.exports = {
   getUserData,
   createUserData,
+  createTransaction
 };
