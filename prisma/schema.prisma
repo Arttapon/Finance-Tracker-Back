@@ -28,6 +28,7 @@ model User {
   Report              Report[]
   Notification        Notification[]
   SharedData          DataSharing[]         @relation("SharedWithUser")
+  UserData            UserData[]
 }
 
 model Profile {
@@ -160,4 +161,9 @@ model Notification {
   createdAt DateTime @default(now())
 }
 
-
+model UserData {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  balance Float
+}

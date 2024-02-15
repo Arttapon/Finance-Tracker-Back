@@ -13,6 +13,7 @@ const dataSharingRoutes = require('./routes/dataSharingRoute');
 const reportRoutes = require('./routes/reportRoute');
 const notificationRoutes = require('./routes/notificationRoute');
 const FinancialPlan = require('./routes/FinancialPlan');
+const userDataRouter = require('./routes/userDataRoute');
 const prisma = require('./models/db');
 
 const app = express();
@@ -34,6 +35,9 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('Welcome to Finance Tracker API');
 });
+
+// เส้นทางสำหรับข้อมูล UserData
+app.use('/userData', userDataRouter);
 
 // Use /auth route from authMiddleware
 app.use('/auth', authMiddleware);
