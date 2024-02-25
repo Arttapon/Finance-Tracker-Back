@@ -5,13 +5,11 @@ const prisma = new PrismaClient();
 // ฟังก์ชันสำหรับการดึงข้อมูล UserData จากฐานข้อมูล
 const getUserData = async (req, res) => {
     try {
+      const { id } = req.params;
       const userData = await prisma.userData.findFirst({   
         where: {
-          userId: 1
+          id: Number(id)
         },
-        include: {
-          user: true
-        }
       });
   
       if (!userData) {
@@ -27,12 +25,14 @@ const getUserData = async (req, res) => {
 
 // ฟังก์ชันสำหรับการสร้างข้อมูล UserData
 const createUserData = async (req, res) => {
-  const { userId, balance } = req.body;
+  const { userId, balance, transactionType, amount } = req.body;
   try {
     const userData = await prisma.userData.create({
       data: {
-        userId: parseInt(userId),
-        balance: parseFloat(balance),
+        userId: Number(userId),
+        balance: Number(balance),
+        transactionType: transactionType,
+        amount: Number(amount)
       },
     });
     res.status(201).json(userData);
@@ -60,7 +60,7 @@ const createTransaction = async (req, res) => {
   }
 };
 
-module.exports = {
+module.exports = {  
   getUserData,
   createUserData,
   createTransaction

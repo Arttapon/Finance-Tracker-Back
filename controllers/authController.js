@@ -57,7 +57,7 @@ module.exports.login = async (req, res, next) => {
 
 module.exports.getMe = (req, res, next) => {
   // ตอนนี้ req.user คือ user ที่ได้มาจาก middleware authenticate
-  res.json({ user: req.user });
+  res.json( req.user );
 };
 
 

@@ -20,23 +20,16 @@ model User {
   Income              Income[]
   Expense             Expense[]
   Budget              Budget[]
-  Saving              Saving[]
-  Investment          Investment[]
   FinancialPlan       FinancialPlan[]
-  InterestCalculation InterestCalculation[]
   DataSharing         DataSharing[]
-  Report              Report[]
-  Notification        Notification[]
   SharedData          DataSharing[]         @relation("SharedWithUser")
   UserData            UserData[]
-  Transaction         Transaction[]
 }
 
 model Profile {
   id           Int    @id @default(autoincrement())
   userId       Int    @unique
   user         User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  fullName     String
   profileImage String
   coverImage   String
 }
@@ -94,45 +87,16 @@ enum BudgetCategory {
   OTHER
 }
 
-model Saving {
-  id            Int      @id @default(autoincrement())
-  userId        Int
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  goalName      String
-  targetAmount  Float
-  currentAmount Float
-  createdAt     DateTime @default(now())
-}
-
-model Investment {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  recommendation String
-  createdAt      DateTime @default(now())
-}
-
 model FinancialPlan {
   id                  Int      @id @default(autoincrement())
   userId              Int
   user                User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  goalName            String
+  PlanName            String
   targetAmount        Float
   currentAmount       Float
   amountToCollect     Float
   collectionFrequency String
   createdAt           DateTime @default(now())
-}
-
-model InterestCalculation {
-  id                 Int      @id @default(autoincrement())
-  userId             Int
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  principalAmount    Float
-  interestRate       Float
-  timePeriod         Int
-  calculatedInterest Float
-  createdAt          DateTime @default(now())
 }
 
 model DataSharing {
@@ -147,23 +111,6 @@ model DataSharing {
   @@index([sharedWithUserId])
 }
 
-model Report {
-  id         Int      @id @default(autoincrement())
-  userId     Int
-  user       User     @relation(fields: [userId], references: [id])
-  reportType String
-  reportData String
-  createdAt  DateTime @default(now())
-}
-
-model Notification {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  message   String
-  createdAt DateTime @default(now())
-}
-
 model UserData {
   id              Int      @id @default(autoincrement())
   userId          Int
@@ -172,15 +119,4 @@ model UserData {
   transactionType String
   amount          Float
   createdAt       DateTime @default(now())
-}
-
-model Transaction {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  amount    Float
-  type      String
-  createdAt DateTime @default(now())
-
-  @@index([userId])
 }

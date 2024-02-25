@@ -19,7 +19,7 @@ exports.createExpense = async (req, res, next) => {
 
 exports.getAllExpenseByUser = async (req, res, next) => {
   try {
-    const expenses = await db.expense.findMany({
+    const expenses = await db.expense.findFirst({
       where: { userId: req.user.id }
     });
     res.send({ expenses });

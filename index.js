@@ -6,18 +6,13 @@ const authMiddleware = require('./routes/auth');
 const profileRoutes = require('./routes/profileRoute');
 const IncomeExpense = require('./routes/IncomeExpense');
 const budgetRoutes = require('./routes/budgetRoute');
-const savingRoutes = require('./routes/savingRoute'); 
-const investmentRoutes = require('./routes/investmentRoute');
-const interestCalculationRoutes = require('./routes/interestCalculationRoute');
 const dataSharingRoutes = require('./routes/dataSharingRoute');
-const reportRoutes = require('./routes/reportRoute');
-const notificationRoutes = require('./routes/notificationRoute');
 const FinancialPlan = require('./routes/FinancialPlan');
 const userDataRouter = require('./routes/userDataRoute');
 const prisma = require('./models/db');
 
 const app = express();
-const PORT = process.env.PORT || 1112;
+const PORT = process.env.PORT || 6969;
 
 // Middleware for receiving JSON data from the request body
 app.use(express.json());
@@ -51,20 +46,14 @@ app.use('/FinancialPlan', FinancialPlan);
 // Use income routes
 app.use('/IncomeExpenses', IncomeExpense);
 
-// Use saving routes
-app.use('/saving', savingRoutes);
-
-// Use investment routes
-app.use('/invesment', investmentRoutes);
-
-// Use interestCalculation, dataSharing, report, and notification routes
-app.use('/interestcalculations', interestCalculationRoutes);
+// Use dataSharing routes
 app.use('/datasharing', dataSharingRoutes);
-app.use('/reports', reportRoutes);
-app.use('/notifications', notificationRoutes);
 
 // Use budget routes
-app.use('/butget', budgetRoutes);
+app.use('/budget', budgetRoutes);
+// app.get('/budget', (req, res, next) => {
+//   res.json('Hello World')
+// });
 
 // Middleware notFound when no route is found
 app.use(notFoundMiddleware);

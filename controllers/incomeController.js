@@ -19,7 +19,7 @@ exports.createIncome = async (req, res, next) => {
 
 exports.getAllIncomeByUser = async (req, res, next) => {
   try {
-    const incomes = await db.income.findMany({
+    const incomes = await db.income.findFirst({
       where: { userId: req.user.id }
     });
     res.send({ incomes });

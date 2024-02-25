@@ -12,3 +12,4 @@ router.put('/:id', authenticate, budgetController.updateBudget);
 router.delete('/:id', authenticate, budgetController.deleteBudget);
 
 module.exports = router;
+    

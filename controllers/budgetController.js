@@ -7,7 +7,7 @@ exports.getByUser = async (req, res, next) => {
     const budgets = await db.budget.findMany({
       where: { userId: req.user.id }
     });
-    res.send({ budgets });
+    res.json( budgets );
   } catch (error) {
     next(error);
   }
@@ -16,15 +16,17 @@ exports.getByUser = async (req, res, next) => {
 exports.createBudget = async (req, res, next) => {
   try {
     const { category, plannedAmount, actualAmount } = req.body;
-    const newBudget = await db.budget.create({
+
+    // console.log(req.body);
+    const budget = await db.budget.create({
       data: {
         userId: req.user.id,
         category,
-        plannedAmount,
-        actualAmount
+        plannedAmount: parseFloat(plannedAmount),
+        actualAmount: parseFloat(actualAmount)
       }
     });
-    res.status(201).json({ budget: newBudget });
+    res.json(budget);
   } catch (error) {
     next(error);
   }
@@ -38,7 +40,7 @@ exports.updateBudget = async (req, res, next) => {
       where: { id: parseInt(id) },
       data: {
         category,
-        plannedAmount,
+        plannedAmount: parseFloat(plannedAmount),
         actualAmount
       }
     });
