@@ -7,46 +7,48 @@ exports.getByUser = async (req, res, next) => {
     const budgets = await db.budget.findMany({
       where: { userId: req.user.id }
     });
-    res.json( budgets );
+    res.json(budgets);
   } catch (error) {
     next(error);
   }
 };
 
-exports.createBudget = async (req, res, next) => {
+exports.createBudget = async (req, res) => {
   try {
-    const { category, plannedAmount, actualAmount } = req.body;
-
-    // console.log(req.body);
+    const { category, plannedAmount } = req.body; // เปลี่ยนเป็น plannedAmount และ category
+    // ตรวจสอบค่า plannedAmount ใน req.body
+    if (!plannedAmount) {
+      throw new Error('Planned Amount is required'); // ถ้าไม่มีให้ throw Error
+    }
     const budget = await db.budget.create({
       data: {
-        userId: req.user.id,
+        userId: req.user.id, // หรือคุณสามารถใช้ req.user.id ได้ตามความเหมาะสม
         category,
-        plannedAmount: parseFloat(plannedAmount),
-        actualAmount: parseFloat(actualAmount)
+        BudgetAmount: parseFloat(plannedAmount) // แปลง Planned Amount เป็น Float
       }
     });
-    res.json(budget);
+    res.status(201).json(budget);
   } catch (error) {
-    next(error);
+    console.error('Error creating budget:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-exports.updateBudget = async (req, res, next) => {
+exports.updateBudget = async (req, res) => {
   try {
     const { id } = req.params;
-    const { category, plannedAmount, actualAmount } = req.body;
+    const { category, plannedAmount } = req.body; // เปลี่ยนเป็น plannedAmount และ category
     const updatedBudget = await db.budget.update({
-      where: { id: parseInt(id) },
+      where: { id },
       data: {
         category,
-        plannedAmount: parseFloat(plannedAmount),
-        actualAmount
+        BudgetAmount: parseFloat(plannedAmount), // แปลง Planned Amount เป็น Float
       }
     });
-    res.json({ budget: updatedBudget });
+    res.status(200).json(updatedBudget);
   } catch (error) {
-    next(error);
+    console.error('Error updating budget:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -61,3 +63,4 @@ exports.deleteBudget = async (req, res, next) => {
     next(error);
   }
 };
+

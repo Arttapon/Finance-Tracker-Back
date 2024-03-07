@@ -15,10 +15,31 @@ exports.getFinancialPlans = async (req, res, next) => {
 
 exports.getPlansById = async (req, res, next) => {
   try {
+    const id = req.user.id
+    if (id !== '') {
+      const gPlans = await db.financialPlan.findMany({
+        where: {
+          userId: id,
+         },
+      });
+      res.send(gPlans);
+    } else {
+      console.log("ไม่พบ ID")
+    }
+  } catch (error) {
+    next(error);
+    // console.log(error)
+  }
+};
+
+exports.getDepositByID = async (req, res, next) => {
+  try {
     const { id } = req.params;
     if (id !== '') {
       const gPlans = await db.financialPlan.findMany({
-        where: { userId: Number(id) }
+        where: {
+          id: Number(id),
+         },
       });
       res.send(gPlans);
     } else {
@@ -52,20 +73,40 @@ exports.createFinancialPlan = async (req, res, next) => {
 exports.updateFinancialPlan = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { goalName, targetAmount, currentAmount } = req.body;
+    if (!id) {
+      return res.status(400).json({ error: 'ID is missing' });
+    }
+    const { PlanName, targetAmount, amountToCollect, newValue } = req.body;
+    // console.log(newValue);
+    
+    const existingFinancialPlan = await db.financialPlan.findFirst({
+      where: { id: Number(id) }
+    });
+
+    const updatedCurrentAmount = existingFinancialPlan.currentAmount + newValue;
+
+    if (!existingFinancialPlan) {
+      return res.status(404).json({ error: 'Financial plan not found' });
+    }
+
     const updatedFinancialPlan = await db.financialPlan.update({
       where: { id: Number(id) },
       data: {
-        goalName,
+        PlanName,
         targetAmount,
-        currentAmount
+        currentAmount: updatedCurrentAmount,
+        amountToCollect
       }
     });
+
     res.json({ financialPlan: updatedFinancialPlan });
   } catch (error) {
     next(error);
   }
 };
+
+
+
 
 exports.deleteFinancialPlan = async (req, res, next) => {
   try {
