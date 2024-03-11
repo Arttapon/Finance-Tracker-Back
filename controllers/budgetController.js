@@ -1,10 +1,10 @@
 // controllers/budgetController.js
 
-const db = require('../models/db');
+const { budget } = require('../models/db');
 
 exports.getByUser = async (req, res, next) => {
   try {
-    const budgets = await db.budget.findMany({
+    const budgets = await budget.findMany({
       where: { userId: req.user.id }
     });
     res.json(budgets);
@@ -15,47 +15,60 @@ exports.getByUser = async (req, res, next) => {
 
 exports.createBudget = async (req, res) => {
   try {
-    const { category, plannedAmount } = req.body; // เปลี่ยนเป็น plannedAmount และ category
-    // ตรวจสอบค่า plannedAmount ใน req.body
-    if (!plannedAmount) {
-      throw new Error('Planned Amount is required'); // ถ้าไม่มีให้ throw Error
+    const { category, BudgetAmount } = req.body;
+    if (!BudgetAmount) {
+      throw new Error('Planned Amount is required');
     }
-    const budget = await db.budget.create({
+    const newBudget = await budget.create({
       data: {
-        userId: req.user.id, // หรือคุณสามารถใช้ req.user.id ได้ตามความเหมาะสม
+        userId: req.user.id,
         category,
-        BudgetAmount: parseFloat(plannedAmount) // แปลง Planned Amount เป็น Float
+        BudgetAmount: parseFloat(BudgetAmount),
+        Used: 0 // ตั้งค่า Used เป็น 0 หรือค่าเริ่มต้นตามความเหมาะสม
       }
-    });
-    res.status(201).json(budget);
+    });    
+    res.status(201).json(newBudget);
   } catch (error) {
     console.error('Error creating budget:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
-exports.updateBudget = async (req, res) => {
+exports.updateBudget = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { category, plannedAmount } = req.body; // เปลี่ยนเป็น plannedAmount และ category
-    const updatedBudget = await db.budget.update({
-      where: { id },
+    if (!id) {
+      return res.status(400).json({ error: 'ID is missing' });
+    }
+    const { category, BudgetAmount, newBudget } = req.body;
+    console.log(newBudget);
+
+    const existingBudget = await budget.findUnique({ where: { id: parseInt(id) } });
+    if (!existingBudget) {
+      return res.status(404).json({ error: 'Budget not found' });
+    }
+
+    const updatedUsed = existingBudget.Used + newBudget;
+
+    const updatedBudget = await budget.update({
+      where: { id: parseInt(id) },
       data: {
-        category,
-        BudgetAmount: parseFloat(plannedAmount), // แปลง Planned Amount เป็น Float
+        Used: updatedUsed // กำหนดค่า Used ที่มีชนิดข้อมูลเป็น Float
       }
     });
-    res.status(200).json(updatedBudget);
+    
+
+    res.json({ budget: updatedBudget });
   } catch (error) {
-    console.error('Error updating budget:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    next(error);
   }
 };
+
 
 exports.deleteBudget = async (req, res, next) => {
   try {
     const { id } = req.params;
-    await db.budget.delete({
+    await budget.delete({
       where: { id: parseInt(id) }
     });
     res.status(204).end();
@@ -63,4 +76,3 @@ exports.deleteBudget = async (req, res, next) => {
     next(error);
   }
 };
-
